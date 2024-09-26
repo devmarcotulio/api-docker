@@ -4,12 +4,12 @@ import DockerListService from "../services/DockerListService";
 class DockerListController {
   constructor(private dockerListService: DockerListService) { }
 
-  async handle(req: Request, res: Response): Promise<void> {
+  async handle(req: Request, res: Response): Promise<Response> {
     try {
       const containers = await this.dockerListService.execute();
-      res.status(200).json(containers);
+      return res.status(200).json(containers);
     } catch (err) {
-      res.status(400).json({ message: `Falha ao listar containers - ${err}`, success: false });
+      return res.status(400).json({ message: `Falha ao listar containers - ${err}`, success: false });
     }
   }
 }

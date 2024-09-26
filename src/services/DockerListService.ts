@@ -1,7 +1,8 @@
 import docker from "../config/DockerConfig";
+import { ContainerInfo } from 'dockerode';
 
 class DockerListService {
-  async execute() {
+  async execute(): Promise<ContainerInfo[]> {
     return await docker.listContainers({ all: true });
   }
 }
