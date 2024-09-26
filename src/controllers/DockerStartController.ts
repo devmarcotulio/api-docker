@@ -4,13 +4,13 @@ import DockerStartService from '../services/DockerStartService';
 class DockerStartController {
   constructor(private dockerStartService: DockerStartService) { }
 
-  async handle(req: Request, res: Response): Promise<void> {
+  async handle(req: Request, res: Response): Promise<Response> {
     const { containerId } = req.body;
     try {
-      await this.dockerStartService.execute(containerId);
-      res.status(200).json({ message: `Container ${containerId} iniciado com sucesso!`, success: true });
+      const result = await this.dockerStartService.execute(containerId);
+      return res.status(result.success ? 200 : 409).json(result);
     } catch (err) {
-      res.status(400).json({ message: `Falha ao iniciar o container ${containerId} - ${err}`, success: false });
+      return res.status(400).json({ message: `Falha ao iniciar o container ${containerId} - ${err}`, success: false });
     }
   }
 }
