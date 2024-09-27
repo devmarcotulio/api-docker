@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { dockerListController, dockerStartAllController, dockerStartController, dockerStopController } from '../config/DockerFactory';
+import { dockerListController, dockerStartAllController, dockerStartController, dockerStopAllController, dockerStopController } from '../config/DockerFactory';
 
 const dockerRouter = Router();
 
@@ -17,6 +17,10 @@ dockerRouter.post('/stop', (req, res) => {
 
 dockerRouter.post('/startAll', (req, res) => {
   dockerStartAllController.handle(req, res);
+})
+
+dockerRouter.post('/stopAll', (req, res) => {
+  dockerStopAllController.handle(req, res);
 })
 
 export default dockerRouter;
