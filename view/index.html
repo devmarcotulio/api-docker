@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Container Logs</title>
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Container Logs</h1>
+    <div class="input-group">
+      <input type="text" id="containerId" placeholder="Digite o ID do container" />
+      <button onclick="startLogStream()">Iniciar Logs</button>
+    </div>
+    <div id="logs">Logs do container aparecerão aqui...</div>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:3000');
+    const logContainer = document.getElementById('logs');
+
+    function startLogStream() {
+      const containerId = document.getElementById('containerId').value;
+
+      if (!containerId) {
+        alert('Por favor, insira o ID do container');
+        return;
+      }
+
+      socket.emit('getContainerLogs', { containerId });
+
+      logContainer.innerHTML = '';
+    }
+
+    socket.on('containerLogs', (log) => {
+      logContainer.innerHTML += log + '\n';
+      logContainer.scrollTop = logContainer.scrollHeight;
+    });
+
+    socket.on('containerLogsEnd', (message) => {
+      logContainer.innerHTML += '\n' + message + '\n';
+    });
+
+    socket.on('error', (errMessage) => {
+      alert('Erro: ' + errMessage);
+    });
+  </script>
+</body>
+
+</html>
